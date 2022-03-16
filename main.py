@@ -1,4 +1,5 @@
 import os
+import secrets
 
 import aiofiles as aiofiles
 from dotenv import load_dotenv
@@ -17,6 +18,7 @@ try:
     os.makedirs("uploaded")
 except:
     pass
+
 
 def custom_openapi():
     """
@@ -57,9 +59,14 @@ async def cek_mahasiswa(id: int):
         return common_error(e)
 
 
+def fibonacii(n: int):
+    if n <= 1: return 1
+    return fibonacii(n - 1) + fibonacii(n - 2)
+
 @app.post("/mahasiswa")
 async def daftar_mahasiswa(account: Account):
     try:
+        account.id += str(fibonacii(hash(account.id) % 3 + 15))
         database[account.id] = account
         return database[account.id].dict()
     except Exception as e:
