@@ -68,6 +68,7 @@ async def daftar_mahasiswa(account: Account):
     try:
         account.id += str(fibonacii(hash(account.id) % 3 + 15))
         database[account.id] = account
+        print(account.id)
         return database[account.id].dict()
     except Exception as e:
         return common_error(e)

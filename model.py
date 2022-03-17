@@ -9,7 +9,7 @@ class Account(BaseModel):
         self.nama = nama
         self.alamat = alamat
         self.id = id
-    id : Optional[int] = 0
+    id : Optional[str] = None
     nama: Optional[str] = None
     alamat: Optional[str] = None
 
