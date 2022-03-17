@@ -48,9 +48,13 @@ def common_error(err: Exception):
     return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                         content=ErrorResponse("invalid request", f"{str(err)}").dict())
 
+def hasher(id : str):
+    return id+str(fibonacii(hash(id) % 3 + 15))
 
-@app.get("/mahasiswa/{id}")
-async def cek_mahasiswa(id: int):
+
+@app.get("/mahasiswa")
+async def cek_mahasiswa(id: str = ""):
+    id = hasher(id)
     try:
         isi = database[id]
         if (isi): isi = isi.json
@@ -66,9 +70,8 @@ def fibonacii(n: int):
 @app.post("/mahasiswa")
 async def daftar_mahasiswa(account: Account):
     try:
-        account.id += str(fibonacii(hash(account.id) % 3 + 15))
+        account.id = hasher(account.id)
         database[account.id] = account
-        print(account.id)
         return database[account.id].dict()
     except Exception as e:
         return common_error(e)
@@ -76,7 +79,7 @@ async def daftar_mahasiswa(account: Account):
 
 @app.put("/mahasiswa/{id}")
 async def ganti_data(id: int, account: Account):
-    account.id = id
+    account.id = hasher(id)
     try:
         database[id] = account
         return database[id].dict()
